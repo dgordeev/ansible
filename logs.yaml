@@ -1,0 +1,19 @@
+- name: Find and downsizing trash logs
+  hosts: all
+  become: no
+  user: root
+ 
+  tasks:
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: /mnt/ansible-playbooks/del_logs.sh
+        dest: /opt/del_logs.sh
+        owner: root
+        group: root
+        mode: '0700'   
+ 
+    - name: Run script
+      shell: /opt/del_logs.sh
+      args:
+         executable: /bin/bash
+      ignore_errors: no

@@ -4,7 +4,7 @@
   user: root
   tasks:  
     - name: Find trace.log files
-      find:
+      ansible.builtin.find:
         paths: "{{ logs_dir }}"
         patterns: "trace.log" 
         size: 100m

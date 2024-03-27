@@ -6,13 +6,14 @@
   tasks:
     - name: Find trace.log file
       find:
-        paths: "{{ logs_dir }}"  
+        paths: 
         size: 100m
         recurse: yes
+        file_type: file
         patterns: trace.log
       register: trace_log_files
 
-    #- name: Print contents of trace.log
-     # command: cat "{{ item.path }}"
-    #  with_items: "{{ trace_log_files.files }}"
+    - name: Print contents of trace.log
+      command: ls -la  "{{ item.path }}"
+      with_items: "{{ trace_log_files.files }}"
 

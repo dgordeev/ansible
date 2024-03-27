@@ -1,18 +1,16 @@
-- name: find and delete trace.log
+---
+- name: Find and print trace.log
   hosts: all
   become: no
   user: root
-  tasks:  
-    - name: Find trace.log files
-      ansible.builtin.find:
-        paths: "{{ logs_dir }}"
-        patterns: "trace.log" 
-        size: 100m
-        recurse: yes
-      register: log_files
-      
-    - name: Delete trace.log files
-      file:
-        path: "{{ item.path }}"
-        state: absent
-      with_items: "{{ log_files.files }}"
+  tasks:
+    - name: Find trace.log file
+      find:
+        paths: "{{ logs_dir }}"  
+        patterns: trace.log
+      register: trace_log_files
+
+    - name: Print contents of trace.log
+      command: cat "{{ item.path }}"
+      with_items: "{{ trace_log_files.files }}"
+

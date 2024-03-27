@@ -1,19 +1,19 @@
----
-- name: Find and print trace.log
+- name: Find and delete trace.log
   hosts: all
   become: no
   user: root
   tasks:
     - name: Find trace.log file
       find:
-        paths: 
+        paths: "{{ logs_dir }}"
         size: 100m
         recurse: yes
         file_type: file
         patterns: trace.log
       register: trace_log_files
 
-    - name: Print contents of trace.log
-      command: ls -la  "{{ item.path }}"
+    - name: Delete trace.log files
+      file:
+        path: "{{ item.path }}"
+        state: absent
       with_items: "{{ trace_log_files.files }}"
-

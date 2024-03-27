@@ -10,6 +10,9 @@
         size: 100m
         recurse: yes
       register: log_files
-    - debug:
-        msg: "{{ [item.path] }} "
+      
+    - name: Delete trace.log files
+      file:
+        path: "{{ item.path }}"
+        state: absent
       with_items: "{{ log_files.files }}"

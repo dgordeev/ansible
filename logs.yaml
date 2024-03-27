@@ -7,6 +7,8 @@
     - name: Find trace.log file
       find:
         paths: "{{ logs_dir }}"  
+        size: 100m
+        recurse: yes
         patterns: trace.log
       register: trace_log_files
 

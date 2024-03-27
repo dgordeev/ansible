@@ -6,7 +6,7 @@
   tasks:
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
-        src: /mnt/ansible-playbooks/del_logs.sh
+        src: /mnt/ansible-playbooks/bash_scripts/del_logs.sh
         dest: /opt/del_logs.sh
         owner: root
         group: root

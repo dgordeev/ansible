@@ -12,7 +12,7 @@
         patterns: trace.log
       register: trace_log_files
 
-    - name: Print contents of trace.log
-      command: cat "{{ item.path }}"
-      with_items: "{{ trace_log_files.files }}"
+    #- name: Print contents of trace.log
+     # command: cat "{{ item.path }}"
+    #  with_items: "{{ trace_log_files.files }}"
 

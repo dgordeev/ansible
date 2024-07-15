@@ -1,0 +1,9 @@
+- name: Install rsync on NextCore all hosts
+  hosts: all
+  become: false
+  tasks:
+    - name: Ensure rsync is installed
+      ansible.builtin.apt:
+        name: rsync
+        state: present
+        update_cache: yes

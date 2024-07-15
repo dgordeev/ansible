@@ -1,0 +1,56 @@
+- name: Update Let's Encrypt Certificate
+  hosts: source
+  become: true
+  user: root
+  tasks:
+    - name: Get certificate from HAProxy
+      shell: "cat /etc/letsencrypt/live/pizda/fullchain.pem /etc/letsencrypt/live/pizda/privkey.pem > /etc/letsencrypt/live/pizda/pizda.pem"
+      changed_when: true
+      failed_when: false
+          
+    - name: Reload HAProxy
+      shell: "haproxy -c -V -f /etc/haproxy/haproxy.cfg"
+      changed_when: true
+      failed_when: false
+      ignore_errors: false
+ 
+    - name: Check if certificate file exists
+      stat:
+        path: /etc/letsencrypt/live/pizda/fullchain.pem
+      register: cert_file
+
+    - name: Debug certificate file existence
+      debug:
+        msg: "Certificate file exists: {{ cert_file.stat.exists }}"
+
+- hosts: source
+  gather_facts: no
+  tasks:
+    - name: Synchronization using rsync protocol (pull)
+      ansible.posix.synchronize:
+        mode: pull
+        src: /etc/letsencrypt/live/pizda/
+        dest: /tmp/zalupa/
+        rsync_opts:
+          - "--copy-links"
+          - "--delete-after"
+          - "--chmod=Du=rwx,Dg=rwx,Do=rwx,Fu=rwx,Fg=rwx,Fo=rwx"
+          - "-zrpth"
+
+- hosts: que1
+  gather_facts: no
+  tasks:
+    - name: Synchronization using rsync protocol (pull)
+      ansible.posix.synchronize:
+        mode: push
+        src: /tmp/zalupa/
+        dest: /etc/letsencrypt/live/pizda/
+
+- hosts: que2
+  gather_facts: no
+  tasks:
+    - name: Synchronization using rsync protocol (pull)
+      ansible.posix.synchronize:
+        mode: push
+        src: /tmp/zalupa/
+        dest: /etc/letsencrypt/live/pizda/

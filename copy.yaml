@@ -54,3 +54,10 @@
         mode: push
         src: /tmp/zalupa/
         dest: /etc/letsencrypt/live/pizda/
+
+- hosts: localhost
+  tasks:
+    - name: Remove /tmp/zalupa directory
+      ansible.builtin.file:
+        state: absent
+        path: /tmp/zalupa/

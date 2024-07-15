@@ -1,6 +1,6 @@
 - name: Update Let's Encrypt Certificate
   hosts: source
-  become: true
+  become: false
   user: root
   tasks:
     - name: Get certificate from HAProxy

@@ -8,7 +8,7 @@
         regexp: '^172\.17\.0\.1'
         line: '172.17.32.250'
         backrefs: yes
-		
+
 - name: Update IP address in /etc/hosts
   hosts: all
   become: yes

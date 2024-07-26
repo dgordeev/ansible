@@ -1,0 +1,18 @@
+- name: nftables configure
+  hosts: all
+  become: no
+  user: root
+ 
+  tasks:
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: /mnt/ansible-playbooks/nftables.conf 
+        dest: /etc/nftables.conf 
+        owner: root
+        group: root
+        mode: '0755'   
+ 
+    - name: Reload nftables configuration
+      ansible.builtin.service:
+        name: nftables
+        state: restarted

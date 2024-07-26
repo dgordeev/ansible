@@ -32,13 +32,7 @@
       shell: "cat /etc/letsencrypt/live/{{ cert_name }}/fullchain.pem /etc/letsencrypt/live/{{ cert_name }}/privkey.pem > /etc/letsencrypt/live/{{ cert_name }}/pizda.pem"
       changed_when: true
       failed_when: false
-          
-    - name: Reload HAProxy
-      shell: "haproxy -c -V -f /etc/haproxy/haproxy.cfg"
-      changed_when: true
-      failed_when: false
-      ignore_errors: false
- 
+      
     - name: Check if certificate file exists
       stat:
         path: /etc/letsencrypt/live/{{ cert_name }}/pizda.pem
@@ -47,6 +41,22 @@
     - name: Debug certificate file existence
       debug:
         msg: "Certificate file exists: {{ cert_file.stat.exists }}"
+        
+    - name: Validate HAProxy configuration
+      command: haproxy -c -f /etc/haproxy/haproxy.cfg
+      register: haproxy_config_check
+      ignore_errors: yes
+
+    - name: Fail if HAProxy configuration is invalid
+      fail:
+        msg: "HAProxy configuration is invalid"
+      when: haproxy_config_check.rc != 0
+
+    - name: Reload HAProxy configuration
+      systemd:
+        name: haproxy
+        state: reloaded
+      when: haproxy_config_check.rc == 0
 
     - name: Reload Asterisk
       shell: "asterisk -rx 'module reload http'" 

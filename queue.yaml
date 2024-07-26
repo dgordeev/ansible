@@ -1,3 +1,13 @@
+- name: Create a directory for ssl cert
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Create a directory
+      ansible.builtin.file:
+        path: /tmp/zalupa
+        state: directory
+        mode: 0775
+
 - name: Update Let's Encrypt Certificate
   hosts: source
   become: false

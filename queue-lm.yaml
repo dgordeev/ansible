@@ -23,11 +23,22 @@
       ansible.builtin.pause:
         seconds: "{{ wait_seconds | int }}"
 
-   # - name: Renew Let's Encrypt certificate
-   #   shell: "certbot renew --cert-name {{ cert_name }}"
-   #   args:
-   #     warn: true 
-
+    - name: Renew Let's Encrypt certificate
+      shell: "certbot renew --cert-name {{ new_cert_name  }}"
+      args:
+        warn: true 
+        
+    - name: Synchronization using rsync protocol (pull)
+      ansible.posix.synchronize:
+        mode: pull
+        src: /etc/letsencrypt/live/{{ new_cert_name }}/
+        dest: /etc/letsencrypt/live/{{ cert_name }}/
+        rsync_opts:
+          - "--copy-links"
+          - "--delete-after"
+          - "--chmod=Du=rwx,Dg=rwx,Do=rwx,Fu=rwx,Fg=rwx,Fo=rwx"
+          - "-zrpth"
+          
     - name: pause for {{ wait_seconds | int }} second(s)
       ansible.builtin.pause:
         seconds: "{{ wait_seconds | int }}"

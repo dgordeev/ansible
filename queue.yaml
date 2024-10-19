@@ -41,7 +41,8 @@
     - name: Reload Caddy configuration
       systemd:
         name: caddy
-        state: reloaded
+        state: restarted
+        daemon_reload: true
 
     - name: Reload Asterisk
       shell: "asterisk -rx 'module reload http'" 

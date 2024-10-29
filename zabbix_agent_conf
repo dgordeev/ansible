@@ -7,7 +7,7 @@
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
         src: /mnt/ansible-playbooks/zabbix/zabbix_agent2.conf
-        dest: /mnt/zabbix/zabbix_agent2.conf
+        dest: /etc/zabbix/zabbix_agent2.conf
         owner: root
         group: root
         mode: '0644'

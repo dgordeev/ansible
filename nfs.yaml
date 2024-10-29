@@ -1,0 +1,19 @@
+- name: nfs exports configure
+  hosts: all
+  become: no
+  user: root
+ 
+  tasks:
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: /mnt/ansible-playbooks/queue-lm/exports 
+        dest: /etc/exports
+        owner: root
+        group: root
+        mode: '0644'   
+ 
+    - name: NFS Server changes
+      shell: "expotrfs -ra" 
+      ignore_errors: false
+      changed_when: true
+      failed_when: false

@@ -1,0 +1,26 @@
+- name: Run SeaweedFS meta save
+  hosts: masters
+  tasks:
+    - name: Backup
+      shell: echo "fs.meta.save -o=/{{ backup_dir }}/$(date '+%Y-%m-%d_%H:%M:%S').meta" | weed shell
+      args:
+        executable: /bin/bash
+      register: weed_shell_output
+
+    - name: Display output of the echo command
+      debug:
+        var: weed_shell_output.stdout
+
+    - name: Find old backup files
+      find:
+        paths: "{{ backup_dir }}"
+        patterns: "*.meta" 
+        age: 3d
+        recurse: yes
+      register: old_backups
+
+    - name: Delete old backup files
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ old_backups.files }}"

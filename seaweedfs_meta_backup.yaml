@@ -1,5 +1,7 @@
 - name: Run SeaweedFS meta save
-  hosts: masters
+  hosts: all
+  become: no
+  user: root
   tasks:
     - name: Backup
       shell: echo "fs.meta.save -o=/{{ backup_dir }}/$(date '+%Y-%m-%d_%H:%M:%S').meta" | weed shell
